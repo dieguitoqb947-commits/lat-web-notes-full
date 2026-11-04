@@ -11,10 +11,11 @@ import { errorHandler, notFoundHandler } from './middleware/error.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
-mongoose
-  .connect(process.env.MONGO_URI!, { maxPoolSize: 10 })
 app.set('trust proxy', 1);
+
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
+ 
+
 
 app.use(express.json());
 app.get('/health', (_req, res) => {
@@ -31,7 +32,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 mongoose
-  .connect(process.env.MONGO_URI!)
+  .connect(process.env.MONGO_URI!, { maxPoolSize: 10 })
   .then(() => {
     console.log('Conectado a MongoDB');
     app.listen(PORT, () => {
